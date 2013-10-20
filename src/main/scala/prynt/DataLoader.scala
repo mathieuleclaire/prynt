@@ -20,8 +20,12 @@ import java.io.{FileReader, File}
 import au.com.bytecode.opencsv.CSVReader
 import prynt.tests.Workspace
 import prynt.tests.TableRow
+import  scala.collection.immutable.StringOps
 
 object DataLoader {
+           implicit def string2Int(s: String): Int = new StringOps(s).toInt
+           implicit def string2Float(s: String): Float = new StringOps(s).toFloat
+
 
   def standardTable(name: String): List[TableRow] = {
     val file = new File(Workspace.standardTableLocation, name + ".csv")
@@ -32,7 +36,7 @@ object DataLoader {
         if (headers.size != 5) throw new SourceFileError("The csv file does is not made of 5 columns")
 
         Iterator.continually(reader.readNext).takeWhile(_ != null).map {
-          case (c1: Int, c2: Int, c3: Int, c4: Float, c5: Float) ⇒ new TableRow(c1, c2, c3, c4, c5)
+          case Array(c1,c2,c3,c4,c5) ⇒ new TableRow(c1, c2, c3, c4, c5)
           case _ => throw new SourceFileError("The csv file structure is invalid")
         }.toList
       case false => throw new SourceFileError(file.getAbsolutePath + "can not be loaded")

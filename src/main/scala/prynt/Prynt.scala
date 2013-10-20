@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 <mathieu.leclaire at free.fr>
+ * Copyright (C) 2011 <mathieu.Mathieu Leclaire at openmole.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,9 @@
  */
 package prynt
 
-import com.github.nscala_time.time.Imports._
-import prynt.tests.TestResult
+class Prynt extends App {
 
-class Patient(val name: String = "",
-              val firstName: String = "",
-              val birthDate: DateTime = DateTime.now,
-              val sex: Boolean = true,
-              val educationalLevel: Int = 0,
-              val address: String = "",
-              val zipCode: String = "",
-              val city: String = "",
-              val appointments: Seq[(TestResult, DateTime)] = List()) {
+  val patient = new Patient("Dylan", "Bob")
+
+  println(patient)
 }
