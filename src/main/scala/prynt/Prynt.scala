@@ -21,4 +21,5 @@ object Prynt extends App {
   val patient = new Patient("Dylan", "Bob")
 
   println(patient.birthDate)
+  println(Workspace.standardTableLocation)
 }

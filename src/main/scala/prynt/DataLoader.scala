@@ -18,7 +18,6 @@ package prynt
 
 import java.io.{FileReader, File}
 import au.com.bytecode.opencsv.CSVReader
-import prynt.tests.Workspace
 import prynt.tests.TableRow
 import  scala.collection.immutable.StringOps
 
