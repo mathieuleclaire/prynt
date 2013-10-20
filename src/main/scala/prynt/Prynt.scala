@@ -16,9 +16,9 @@
  */
 package prynt
 
-class Prynt extends App {
+object Prynt extends App {
 
   val patient = new Patient("Dylan", "Bob")
 
-  println(patient)
+  println(patient.birthDate)
 }
