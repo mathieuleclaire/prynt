@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 <mathieu.leclaire at free.fr>
+ * Copyright (C) 2011 <mathieu.Mathieu Leclaire at openmole.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,4 @@
  */
 package prynt
 
-import com.github.nscala_time.time.Imports._
-import prynt.tests.TestResult
-
-class Patient(val name: String,
-              val firstName: String,
-              val birthDate: DateTime,
-              val sex: Boolean,
-              val educationalLevel: Int,
-              val address: String,
-              val zipCode: String,
-              val city: String,
-              val appointments: Seq[(TestResult, DateTime)]) {
-}
+class SourceFileError(msg: String) extends Throwable(msg)

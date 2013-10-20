@@ -14,18 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package prynt
+package prynt.tests
 
-import com.github.nscala_time.time.Imports._
-import prynt.tests.TestResult
+import java.io.File
 
-class Patient(val name: String,
-              val firstName: String,
-              val birthDate: DateTime,
-              val sex: Boolean,
-              val educationalLevel: Int,
-              val address: String,
-              val zipCode: String,
-              val city: String,
-              val appointments: Seq[(TestResult, DateTime)]) {
+object Workspace {
+
+  val defaultLocation = {
+    val dir = new File(System.getProperty("user.home"), ".prynt")
+    dir.mkdirs
+    dir
+  }
+
+  val standardTableLocation = new File(defaultLocation, "standardTables")
+  standardTableLocation.mkdirs
+
+
 }
