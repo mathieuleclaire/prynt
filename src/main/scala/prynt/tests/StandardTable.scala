@@ -17,9 +17,12 @@
 package prynt.tests
 
 import prynt.DataLoader
+import Sex._
 
 class StandardTable(val name: String) {
     val rows: List[TableRow] = DataLoader.standardTable(name)
 }
 
-class TableRow(val c1: Int, val c2: Int, val c3: Int, val mean: Float, val std: Float)
+class TableRow(val sex: Sex, val edLevel: Int, val age: Int, val mean: Float, val std: Float){
+  override def toString = "Sex: " + sex.name + ", Educational level: " + edLevel + ", age: " + age + ", mean: " + mean + ", std: " + std
+}

@@ -17,3 +17,5 @@
 package prynt
 
 class SourceFileError(msg: String) extends Throwable(msg)
+
+class TypeError(msg: String) extends Throwable(msg)

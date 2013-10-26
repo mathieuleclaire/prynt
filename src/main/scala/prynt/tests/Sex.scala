@@ -14,13 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package prynt
+package prynt.tests
 
-object Prynt extends App {
+import prynt.TypeError
 
-  val patient = new Patient("Dylan", "Bob")
+object Sex extends Enumeration {
 
-  println(patient.birthDate)
-  println(Workspace.standardTableLocation)
-  println(DataLoader.standardTable("test1"))
+  implicit def charToSex(symbol: String) = symbol match {
+    case "m" | "M" => MALE
+    case "f" | "F" => FEMALE
+    case _=> throw new TypeError("Only f, F, m and M are allowed to describe the sex")
+  }
+
+  case class Sex(name: String) extends Val(name)
+  val MALE = new Sex("Homme")
+  val FEMALE = new Sex("Femme")
+
 }
