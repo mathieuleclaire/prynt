@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package prynt.tests
+package prynt.test
 
-import prynt.DataLoader
+import prynt.patient.Sex
 import Sex._
+import prynt.util.DataLoader
 
 class StandardTable(val name: String) {
-    val rows: List[TableRow] = DataLoader.standardTable(name)
+    lazy val rows: List[TableRow] = DataLoader.standardTable(name)
 }
 
 class TableRow(val sex: Sex, val edLevel: Int, val age: Int, val mean: Float, val std: Float){

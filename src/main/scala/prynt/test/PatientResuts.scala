@@ -14,8 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package prynt
+package prynt.test
 
-class SourceFileError(msg: String) extends Throwable(msg)
+import slick.driver.H2Driver.simple._
 
-class TypeError(msg: String) extends Throwable(msg)
+object PatientResults extends Table[(String, String)]("PATIENT_RESULTS") {
+  def patientID = column[String]("PATIENT_ID")
+  def testResultID = column[String]("TEST_RESULT_ID")
+
+  def * = patientID ~ testResultID
+}

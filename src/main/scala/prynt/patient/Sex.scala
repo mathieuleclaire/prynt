@@ -14,29 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package prynt
+package prynt.patient
 
-import prynt.util.{Workspace, DataLoader}
-import prynt.test._
-import prynt.patient._
-import scala.slick.driver.H2Driver.simple._
-import scala.slick.jdbc.meta.MTable
-import scala.slick.lifted.DDL
+import prynt.util.TypeError
 
-// Use the implicit threadLocalSession
-import Database.threadLocalSession
+object Sex extends Enumeration {
 
-object Prynt extends App {
-
-  println(Workspace.standardTableLocation)
-  println(DataLoader.standardTable("test1"))
-
-  Database.forURL("jdbc:h2:" + Workspace.defaultLocation + "/db", driver = "org.h2.Driver") withSession {
-
-  List(Patients, TestResults, PatientResults).filterNot{ t=>
-  MTable.getTables.list.exists(_.name.name == t.tableName)}.foreach{_.ddl.create}
-
-  println(MTable.getTables.list)
-    //Sexes.insert("Male")
+  implicit def charToSex(symbol: String) = symbol match {
+    case "m" | "M" => MALE
+    case "f" | "F" => FEMALE
+    case _=> throw new TypeError("Only f, F, m and M are allowed to describe the sex")
   }
+
+  case class Sex(name: String) extends Val(name)
+  val MALE = new Sex("Homme")
+  val FEMALE = new Sex("Femme")
+
 }

@@ -1,6 +1,7 @@
-package prynt.tests
+package prynt.test
 
-import prynt.Patient
+import prynt.util.DataLoader
+
 
 /*
 * Copyright (C) 2013 <mathieu.leclaire at free.fr>
@@ -19,10 +20,17 @@ import prynt.Patient
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+object Test {
+
+  def test1 = new Test {
+    val name = "Test1"
+    lazy val standardTable = new StandardTable(name)
+    def standardFunction(patientId: String) = 8
+  }
+}
+
 trait Test {
    def name: String
-
    def standardTable: StandardTable
-
-   def standardFunction(patient: Patient): Float
+   def standardFunction(patientId: String): Float
 }

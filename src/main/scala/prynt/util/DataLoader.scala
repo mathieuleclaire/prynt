@@ -14,16 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package prynt
+package prynt.util
 
 import java.io.{FileReader, File}
 import au.com.bytecode.opencsv.CSVReader
-import prynt.tests._
-import  scala.collection.immutable.StringOps
+import prynt.test._
+import scala.collection.immutable.StringOps
+import scala.slick.jdbc.meta.MTable
 
 object DataLoader {
-           implicit def string2Int(s: String): Int = new StringOps(s).toInt
-           implicit def string2Float(s: String): Float = new StringOps(s).toFloat
+  implicit def string2Int(s: String): Int = new StringOps(s).toInt
+  implicit def string2Float(s: String): Float = new StringOps(s).toFloat
 
 
   def standardTable(name: String): List[TableRow] = {
@@ -35,7 +36,7 @@ object DataLoader {
         if (headers.size != 5) throw new SourceFileError("The csv file does is not made of 5 columns")
 
         Iterator.continually(reader.readNext).takeWhile(_ != null).map {
-          case Array(c1,c2,c3,c4,c5) ⇒ new TableRow(c1, c2, c3, c4, c5)
+          case Array(c1, c2, c3, c4, c5) ⇒ new TableRow(c1, c2, c3, c4, c5)
           case _ => throw new SourceFileError("The csv file structure is invalid")
         }.toList
       case false => throw new SourceFileError(file.getAbsolutePath + "can not be loaded")

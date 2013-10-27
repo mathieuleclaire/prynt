@@ -14,20 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package prynt.tests
+package prynt.patient
 
-import prynt.TypeError
+object MaritalStatus extends Enumeration {
 
-object Sex extends Enumeration {
-
-  implicit def charToSex(symbol: String) = symbol match {
-    case "m" | "M" => MALE
-    case "f" | "F" => FEMALE
-    case _=> throw new TypeError("Only f, F, m and M are allowed to describe the sex")
-  }
-
-  case class Sex(name: String) extends Val(name)
-  val MALE = new Sex("Homme")
-  val FEMALE = new Sex("Femme")
+  case class MaritalStatus(name: String) extends Val(name)
+  val MARRIED = new MaritalStatus("Homme")
+  val SINGLE = new MaritalStatus("Célibataire")
+  val DIVORCED = new MaritalStatus("Divorcé")
+  val WIDOWER = new MaritalStatus("Veuf")
 
 }

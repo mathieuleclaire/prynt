@@ -14,12 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package prynt.tests
+package prynt.util
 
-trait TestResult {
-  val test: Test
+class SourceFileError(msg: String) extends Throwable(msg)
 
-  val rawMark: Float
-
-
-}
+class TypeError(msg: String) extends Throwable(msg)
