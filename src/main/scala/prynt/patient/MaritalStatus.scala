@@ -18,7 +18,10 @@ package prynt.patient
 
 object MaritalStatus extends Enumeration {
 
-  case class MaritalStatus(name: String) extends Val(name)
+  case class MaritalStatus(name: String) extends Val(name){
+    override def toString = name
+  }
+
   val MARRIED = new MaritalStatus("Homme")
   val SINGLE = new MaritalStatus("Célibataire")
   val DIVORCED = new MaritalStatus("Divorcé")

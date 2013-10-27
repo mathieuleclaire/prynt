@@ -26,7 +26,10 @@ object Sex extends Enumeration {
     case _=> throw new TypeError("Only f, F, m and M are allowed to describe the sex")
   }
 
-  case class Sex(name: String) extends Val(name)
+  case class Sex(name: String) extends Val(name) {
+    override def toString = name
+  }
+
   val MALE = new Sex("Homme")
   val FEMALE = new Sex("Femme")
 

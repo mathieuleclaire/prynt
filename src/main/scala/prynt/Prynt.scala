@@ -19,9 +19,12 @@ package prynt
 import prynt.util.{Workspace, DataLoader}
 import prynt.test._
 import prynt.patient._
+import prynt.patient.Sex._
+import prynt.patient.MaritalStatus._
 import scala.slick.driver.H2Driver.simple._
 import scala.slick.jdbc.meta.MTable
-import scala.slick.lifted.DDL
+import java.sql.Date
+import scala.slick.lifted.PrimaryKey
 
 // Use the implicit threadLocalSession
 import Database.threadLocalSession
@@ -37,6 +40,13 @@ object Prynt extends App {
   MTable.getTables.list.exists(_.name.name == t.tableName)}.foreach{_.ddl.create}
 
   println(MTable.getTables.list)
-    //Sexes.insert("Male")
+
+  Patients.autoInc.insert(None,"Brown", "James", new Date(1972,11,4),MALE.toString, MARRIED.toString, 7, 0, "7, Brown street", "95199", "Groundsville")
+
+  Query(Patients).map{_.name}.update("Red")
+
+        Query(Patients) foreach { case (id, name, _, _, _,_,_,_,_,_,_) =>
+      println(" " + id + "\t" + name)
+    }
   }
 }

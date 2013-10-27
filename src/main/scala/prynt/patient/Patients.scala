@@ -19,9 +19,9 @@ package prynt.patient
 import slick.driver.H2Driver.simple._
 import java.sql.Date
 
-object Patients extends Table[(String, String, String, Date, String, String, Int, Int, String, String, String)]("PATIENTS") {
+object Patients extends Table[(Option[Int], String, String, Date, String, String, Int, Int, String, String, String)]("PATIENTS") {
 
-  def id = column[String]("PAT_ID", O.PrimaryKey, O.AutoInc)
+  def id = column[Option[Int]]("PAT_ID", O.PrimaryKey, O.AutoInc)
   def name = column[String]("PATIENT_NAME")
   def firstName = column[String]("PATIENT_FIRSTNAME")
   def birthDate = column[Date]("BIRTH_DATE")
@@ -34,4 +34,6 @@ object Patients extends Table[(String, String, String, Date, String, String, Int
   def city = column[String]("CITY")
 
   def * = id ~ name ~ firstName ~ birthDate ~ sex ~ maritalStatus ~ educationalLevel ~ numberOfChildren~ address ~ zipCode ~ city
+
+  def autoInc = id.? ~ name ~ firstName ~ birthDate ~ sex ~ maritalStatus ~ educationalLevel ~ numberOfChildren~ address ~ zipCode ~ city
 }
