@@ -19,9 +19,21 @@ package prynt.patient
 import slick.driver.H2Driver.simple._
 import java.sql.Date
 
-object Patients extends Table[(Option[Int], String, String, Date, String, String, Int, Int, String, String, String)]("PATIENTS") {
+case class Patient(id: Option[Int] = None,
+                   name: String = "",
+                   firstName: String = "",
+                   birthDate: Date = new Date(123),
+                   sex: String = "",
+                   maritalStatus: String = "",
+                   educationalLevel: Int = 0,
+                   numberOfChildren: Int = 0,
+                   address: String = "",
+                   zipCode: String = "",
+                   city: String = "")
 
-  def id = column[Option[Int]]("PAT_ID", O.PrimaryKey, O.AutoInc)
+object Patients extends Table[Patient]("PATIENTS") {
+
+  def id = column[Int]("PAT_ID", O.PrimaryKey, O.AutoInc)
   def name = column[String]("PATIENT_NAME")
   def firstName = column[String]("PATIENT_FIRSTNAME")
   def birthDate = column[Date]("BIRTH_DATE")
@@ -33,7 +45,7 @@ object Patients extends Table[(Option[Int], String, String, Date, String, String
   def zipCode = column[String]("ZIP_CODE")
   def city = column[String]("CITY")
 
-  def * = id ~ name ~ firstName ~ birthDate ~ sex ~ maritalStatus ~ educationalLevel ~ numberOfChildren~ address ~ zipCode ~ city
+   def * = id.? ~ name ~ firstName ~ birthDate ~ sex ~ maritalStatus ~ educationalLevel ~ numberOfChildren ~ address ~ zipCode ~ city<> (Patient, Patient.unapply _)
 
   def autoInc = id.? ~ name ~ firstName ~ birthDate ~ sex ~ maritalStatus ~ educationalLevel ~ numberOfChildren~ address ~ zipCode ~ city
 }

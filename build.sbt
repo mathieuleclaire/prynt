@@ -1,3 +1,9 @@
+import AssemblyKeys._
+
+assemblySettings
+
+jarName in assembly := "prynt.jar"
+
 name := "prynt"
 
 scalaVersion := "2.10.2"

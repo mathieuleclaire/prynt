@@ -14,25 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package prynt.patient
+package gui
 
-import prynt.util.TypeError
+import scalafx.application.JFXApp
+import scalafx.scene.Scene
+import scalafx.scene.control.{CheckBox, ListView}
+import prynt.util.PryntQuery
+import prynt.util.Converters._
+import scalafx.collections.ObservableBuffer
+import scalafx.scene.layout.VBox
+import scalafx.geometry.Insets
 
-object Sex extends Enumeration {
+object PryntStage {
 
-  implicit def charToSex(symbol: String) = symbol match {
-    case "m" | "M" => MALE
-    case "f" | "F" => FEMALE
-    case _=> throw new TypeError("Only f, F, m and M are allowed to describe the sex")
+  def apply = new JFXApp.PrimaryStage {
+    title = "ScalaFx Test"
+    width = 1000
+    height = 700
+
+
+    scene = new Scene {
+      content = new PatientPanel
+    }
   }
-
-  case class Sex(name: String) extends Val(name) {
-    override def toString = name
-  }
-
-  def sexes = Seq(MALE, FEMALE)
-
-  val MALE = new Sex("Homme")
-  val FEMALE = new Sex("Femme")
-
 }

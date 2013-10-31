@@ -14,25 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package prynt.patient
+package gui
 
-import prynt.util.TypeError
+import scalafx.scene.Node
+import scalafx.scene.control.Label
+import scalafx.geometry._
+import scalafx.scene.layout.HBox
 
-object Sex extends Enumeration {
+object Widget {
 
-  implicit def charToSex(symbol: String) = symbol match {
-    case "m" | "M" => MALE
-    case "f" | "F" => FEMALE
-    case _=> throw new TypeError("Only f, F, m and M are allowed to describe the sex")
+  def label(t: String) = new Label(t) {
+    style = "-fx-font-weight:bold"
+    alignmentInParent = Pos.BASELINE_RIGHT
   }
 
-  case class Sex(name: String) extends Val(name) {
-    override def toString = name
+  def hbox(controls: Seq[Node]) = new HBox{
+  spacing = 10
+  alignment = Pos.CENTER
+  padding = Insets(5, 10, 5, 10)
+  content = controls
   }
-
-  def sexes = Seq(MALE, FEMALE)
-
-  val MALE = new Sex("Homme")
-  val FEMALE = new Sex("Femme")
 
 }

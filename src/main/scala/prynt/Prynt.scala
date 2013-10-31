@@ -16,37 +16,25 @@
  */
 package prynt
 
-import prynt.util.{Workspace, DataLoader}
-import prynt.test._
+import _root_.gui.PryntStage
+import prynt.util.{PryntQuery, DataLoader}
 import prynt.patient._
-import prynt.patient.Sex._
-import prynt.patient.MaritalStatus._
-import scala.slick.driver.H2Driver.simple._
-import scala.slick.jdbc.meta.MTable
-import java.sql.Date
-import scala.slick.lifted.PrimaryKey
+import scalafx.application.JFXApp
 
-// Use the implicit threadLocalSession
-import Database.threadLocalSession
 
-object Prynt extends App {
 
-  println(Workspace.standardTableLocation)
+object Prynt extends JFXApp {
   println(DataLoader.standardTable("test1"))
+  PryntQuery.createTables
 
-  Database.forURL("jdbc:h2:" + Workspace.defaultLocation + "/db", driver = "org.h2.Driver") withSession {
+  //Patients.autoInc.insert(None, "Brown", "James", new Date(1972, 11, 4), MALE.toString, MARRIED.toString, 7, 0, "7, Brown street", "95199", "Groundsville")
 
-  List(Patients, TestResults, PatientResults).filterNot{ t=>
-  MTable.getTables.list.exists(_.name.name == t.tableName)}.foreach{_.ddl.create}
+  PryntQuery.update(new Patient(name="Kerry", firstName="John"))
 
-  println(MTable.getTables.list)
-
-  Patients.autoInc.insert(None,"Brown", "James", new Date(1972,11,4),MALE.toString, MARRIED.toString, 7, 0, "7, Brown street", "95199", "Groundsville")
-
-  Query(Patients).map{_.name}.update("Red")
-
-        Query(Patients) foreach { case (id, name, _, _, _,_,_,_,_,_,_) =>
-      println(" " + id + "\t" + name)
-    }
+  PryntQuery.patients foreach {
+    p =>
+      println(" " + p.id + "\t" + p.name)
   }
+
+stage = PryntStage.apply
 }

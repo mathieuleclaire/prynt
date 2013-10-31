@@ -22,7 +22,9 @@ object MaritalStatus extends Enumeration {
     override def toString = name
   }
 
-  val MARRIED = new MaritalStatus("Homme")
+  def statuses = Seq(MARRIED, SINGLE, DIVORCED, WIDOWER)
+
+  val MARRIED = new MaritalStatus("Marié")
   val SINGLE = new MaritalStatus("Célibataire")
   val DIVORCED = new MaritalStatus("Divorcé")
   val WIDOWER = new MaritalStatus("Veuf")
