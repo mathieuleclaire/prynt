@@ -22,6 +22,7 @@ import prynt.patient.{Patient, Patients}
 import prynt.test.{PatientResults, TestResults}
 import Database.threadLocalSession
 import scala.slick.jdbc.meta.MTable
+import java.sql.Date
 
 object PryntQuery {
 
@@ -29,12 +30,9 @@ object PryntQuery {
     f
   }
 
-  def patients = apply({Query(Patients).list})
-
-  def update(patient: Patient) = apply({Query(Patients).update(patient)})
-
   def createTables = apply({
-    List(Patients, TestResults, PatientResults).filterNot { t =>
+    List(Patients, TestResults, PatientResults).filterNot {
+      t =>
         MTable.getTables.list.exists(_.name.name == t.tableName)
     }.foreach {
       _.ddl.create

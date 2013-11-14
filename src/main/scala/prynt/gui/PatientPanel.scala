@@ -18,27 +18,88 @@ package gui
 
 import prynt.util.PryntQuery
 import scalafx.scene.control._
+import scalafx.scene.control.SelectionMode
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.layout._
+import prynt.util.Converters._
 import prynt.patient.MaritalStatus._
 import prynt.patient.Sex._
+import scalafx.event.ActionEvent
+import java.sql.Date
+import scalafx.Includes._
+import prynt.patient.{Patients, Patient}
+import scalafx.beans.value.ObservableValue
 
 class PatientPanel extends HBox {
 
-  val table = new ListView[String] {
+  var currentPatient: Option[Patient] = None
+
+  val table = new ListView[Patient] {
     maxWidth = 200
     items = {
-      val personsTableModel = new ObservableBuffer[String]
-      personsTableModel ++= PryntQuery.patients.map {
-        p => p.name + " " + p.firstName
-      }
+      val model = new ObservableBuffer[Patient]
+      model ++= Patients.list
+    }
+    selectionModel().selectedItem.onChange[Patient] {
+      (o: ObservableValue[Patient, Patient], pold: Patient, p: Patient) =>
+        invokeUpdate
+        currentPatient = Some(p)
+        nameTextField.text = p.name
+        firstnameTextField.text = p.firstName
+      //sexComboBox.selectionModel().selectedItem = p.sex
     }
   }
 
-  val nameTextField = new TextField { promptText = "Nom du patient" }
+  def invokeUpdate = Patients.updateOrInsert(currentPatient,
+          nameTextField.text,
+          firstnameTextField.text,
+          new Date(1, 1, 3),
+          "Homme",
+          "Marié",
+          0,
+          0,
+          "", "", "")
+
+  val newButton = new Button {
+    style = "-fx-base: #666 "
+    text = "Nouveau"
+    onAction = {
+      (_: ActionEvent) =>
+        Patients.newPatient
+        clearForm
+    }
+  }
+
+  val deleteButton = new Button {
+    style = "-fx-base: #666 "
+    text = "Supprimer"
+    onAction = {
+      (_: ActionEvent) => List(currentPatient).flatten.foreach {
+        Patients.delete
+      }
+
+    }
+  }
+
+  def clearForm = {
+    nameTextField.text = ""
+    firstnameTextField.text = ""
+  }
+
+  val toolBar = new ToolBar {
+    id = "blue"
+    style = "-fx-base: dodgerblue"
+    content = List(newButton, deleteButton)
+  }
+
+  val nameTextField = new TextField {
+    promptText = "Nom du patient"
+  }
   val namebox = Widget.hbox(Seq(Widget.label("Nom"), nameTextField))
 
-  val firstnameTextField = new TextField { promptText = "Prénom du patient" }
+  val firstnameTextField = new TextField {
+    promptText = "Prénom du patient"
+  }
   val firstnamebox = Widget.hbox(Seq(Widget.label("Prénom"), firstnameTextField))
 
   val sexComboBox = new ComboBox(sexes)
@@ -48,7 +109,7 @@ class PatientPanel extends HBox {
   val maritalBox = Widget.hbox(Seq(Widget.label("Situation familiale"), maritalComboBox))
 
   val form = new VBox {
-    content = Seq(namebox, firstnamebox, Widget.hbox(Seq(sexbox, maritalBox)))
+    content = Seq(toolBar, namebox, firstnamebox, Widget.hbox(Seq(sexbox, maritalBox)))
   }
 
   content = List(table, form)

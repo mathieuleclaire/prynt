@@ -18,6 +18,8 @@ package prynt.patient
 
 import slick.driver.H2Driver.simple._
 import java.sql.Date
+import prynt.util.PryntQuery
+import Database.threadLocalSession
 
 case class Patient(id: Option[Int] = None,
                    name: String = "",
@@ -29,7 +31,9 @@ case class Patient(id: Option[Int] = None,
                    numberOfChildren: Int = 0,
                    address: String = "",
                    zipCode: String = "",
-                   city: String = "")
+                   city: String = ""){
+  override def toString = name + " " + firstName
+}
 
 object Patients extends Table[Patient]("PATIENTS") {
 
@@ -45,7 +49,50 @@ object Patients extends Table[Patient]("PATIENTS") {
   def zipCode = column[String]("ZIP_CODE")
   def city = column[String]("CITY")
 
-   def * = id.? ~ name ~ firstName ~ birthDate ~ sex ~ maritalStatus ~ educationalLevel ~ numberOfChildren ~ address ~ zipCode ~ city<> (Patient, Patient.unapply _)
+   def * = id.? ~ name ~ firstName ~ birthDate ~ sex ~ maritalStatus ~ educationalLevel ~ numberOfChildren ~ address ~ zipCode ~ city <> (Patient, Patient.unapply _)
 
   def autoInc = id.? ~ name ~ firstName ~ birthDate ~ sex ~ maritalStatus ~ educationalLevel ~ numberOfChildren~ address ~ zipCode ~ city
+
+
+  def list = PryntQuery({ Query(Patients).list})
+
+  def select(p: Patient) = PryntQuery({Query(Patients).filter(_.id === p.id)})
+
+  def updateOrInsert(patient: Option[Patient],
+             n: String,
+             fn: String,
+             bd: Date,
+             s: String,
+             ms: String,
+             el: Int,
+             nc: Int,
+             a: String,
+             zp: String,
+             city: String) = {
+    patient match {
+      case None => insert(None, n, fn, bd, s, ms, el, nc, a, zp, city)
+      case Some(p: Patient) => update(new Patient(p.id, n, fn, bd, s, ms, el, nc, a, zp, city))
+    }
+  }
+
+  def update(patient: Patient) = PryntQuery({select(patient).update(patient)})
+
+  def newPatient = PryntQuery({Patients.autoInc.insert(None, "", "", new Date(123), "", "", 0, 0, "", "", "")})
+
+  def insert(id: Option[Int],
+             n: String,
+             fn: String,
+             bd: Date,
+             s: String,
+             ms: String,
+             el: Int,
+             nc: Int,
+             a: String,
+             zp: String,
+             city: String) = PryntQuery({
+    Patients.autoInc.insert(id, n, fn, bd, s, ms, el, nc, a, zp, city)
+  })
+
+  def delete(p: Patient) = PryntQuery({select(p).delete})
+
 }

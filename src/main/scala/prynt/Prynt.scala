@@ -21,17 +21,11 @@ import prynt.util.{PryntQuery, DataLoader}
 import prynt.patient._
 import scalafx.application.JFXApp
 
-
-
 object Prynt extends JFXApp {
   println(DataLoader.standardTable("test1"))
   PryntQuery.createTables
 
-  //Patients.autoInc.insert(None, "Brown", "James", new Date(1972, 11, 4), MALE.toString, MARRIED.toString, 7, 0, "7, Brown street", "95199", "Groundsville")
-
-  PryntQuery.update(new Patient(name="Kerry", firstName="John"))
-
-  PryntQuery.patients foreach {
+  Patients.list foreach {
     p =>
       println(" " + p.id + "\t" + p.name)
   }

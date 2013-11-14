@@ -21,11 +21,10 @@ import prynt.util.TypeError
 object Sex extends Enumeration {
 
   implicit def charToSex(symbol: String) = symbol match {
-    case "m" | "M" => MALE
-    case "f" | "F" => FEMALE
+    case "m" | "M" | "Homme" => MALE
+    case "f" | "F" | "Femme" => FEMALE
     case _=> throw new TypeError("Only f, F, m and M are allowed to describe the sex")
   }
-
   case class Sex(name: String) extends Val(name) {
     override def toString = name
   }

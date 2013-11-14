@@ -21,4 +21,6 @@ import scalafx.beans.property.StringProperty
 object Converters {
 
   implicit def stringToStringProperty(s: String) = StringProperty(s)
+
+  implicit def stringPropertyToString(sp: StringProperty) = sp.value
 }
