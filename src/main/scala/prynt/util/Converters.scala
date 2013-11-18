@@ -17,10 +17,37 @@
 package prynt.util
 
 import scalafx.beans.property.StringProperty
+import prynt.patient.MaritalStatus._
+import prynt.patient.Sex._
 
 object Converters {
 
   implicit def stringToStringProperty(s: String) = StringProperty(s)
 
   implicit def stringPropertyToString(sp: StringProperty) = sp.value
+
+  implicit def someToValue[T](x: Option[T]) = x match {
+    case Some(x)=> x
+    case _=> null
+  }
+
+  implicit def objectToString[T](o: T) = o match {
+    case null=> ""
+    case _=> o.toString
+  }
+
+  implicit def stringToMS(symbol: String): MaritalStatus = symbol match {
+    case "Marié" => MARRIED
+    case "Célibataire" => SINGLE
+    case "Divorcé" => DIVORCED
+    case "Voeuf" => WIDOWER
+    case _=> null
+  }
+
+  implicit def stringToSex(symbol: String): Sex = symbol match {
+    case "m" | "M" | "Homme" => MALE
+    case "f" | "F" | "Femme" => FEMALE
+    case _=> null
+  }
+
 }

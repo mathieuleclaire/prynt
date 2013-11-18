@@ -16,7 +16,7 @@
  */
 package gui
 
-import prynt.util.PryntQuery
+import prynt.util.{Converters, PryntQuery}
 import scalafx.scene.control._
 import scalafx.scene.control.SelectionMode
 import scalafx.collections.ObservableBuffer
@@ -32,40 +32,44 @@ import scalafx.beans.value.ObservableValue
 
 class PatientPanel extends HBox {
 
-  var currentPatient: Option[Patient] = None
+  var currentPatient: Option[(Patient,Int)] = None
 
-  val table = new ListView[Patient] {
+  val table = new ListView[Patient] { tt=>
     maxWidth = 200
-    items = {
-      val model = new ObservableBuffer[Patient]
-      model ++= Patients.list
-    }
+    items() ++= Patients.list
     selectionModel().selectedItem.onChange[Patient] {
       (o: ObservableValue[Patient, Patient], pold: Patient, p: Patient) =>
-        invokeUpdate
-        currentPatient = Some(p)
+        val patient = getPatient
+        if (patient != pold) {
+          if (pold != null) {
+            println("Different " + patient.fullString + "\n" + pold.fullString)
+          tt.items().update(currentPatient.map{_._2}.getOrElse(0), patient)
+          Patients.update(patient)
+          }
+          else println("EQUAL")
+        }
+        currentPatient = Some((p,selectionModel().selectedIndex.toInt))
         nameTextField.text = p.name
         firstnameTextField.text = p.firstName
-      //sexComboBox.selectionModel().selectedItem = p.sex
+        sexComboBox.value() = Converters.stringToSex(p.sex)
+        maritalComboBox.value() = Converters.stringToMS(p.maritalStatus)
     }
   }
 
-  def invokeUpdate = Patients.updateOrInsert(currentPatient,
-          nameTextField.text,
-          firstnameTextField.text,
-          new Date(1, 1, 3),
-          "Homme",
-          "Marié",
-          0,
-          0,
-          "", "", "")
+  def getPatient = {
+    new Patient(currentPatient.flatMap {_._1.id},
+      nameTextField.text,
+      firstnameTextField.text,
+      sex = sexComboBox.value(),
+      maritalStatus = maritalComboBox.value())
+  }
 
   val newButton = new Button {
     style = "-fx-base: #666 "
     text = "Nouveau"
     onAction = {
       (_: ActionEvent) =>
-        Patients.newPatient
+        table.items() += Patients.newPatient
         clearForm
     }
   }
@@ -75,7 +79,9 @@ class PatientPanel extends HBox {
     text = "Supprimer"
     onAction = {
       (_: ActionEvent) => List(currentPatient).flatten.foreach {
-        Patients.delete
+        p =>
+          table.items() -= p._1
+          Patients.delete(p._1)
       }
 
     }

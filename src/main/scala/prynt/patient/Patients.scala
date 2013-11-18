@@ -33,6 +33,8 @@ case class Patient(id: Option[Int] = None,
                    zipCode: String = "",
                    city: String = ""){
   override def toString = name + " " + firstName
+
+  def fullString = name + " " + firstName + " " + birthDate + " " + sex + " " + maritalStatus + " " + educationalLevel + " " + numberOfChildren + " " + address + " " + zipCode + " " + city
 }
 
 object Patients extends Table[Patient]("PATIENTS") {
@@ -51,35 +53,29 @@ object Patients extends Table[Patient]("PATIENTS") {
 
    def * = id.? ~ name ~ firstName ~ birthDate ~ sex ~ maritalStatus ~ educationalLevel ~ numberOfChildren ~ address ~ zipCode ~ city <> (Patient, Patient.unapply _)
 
-  def autoInc = id.? ~ name ~ firstName ~ birthDate ~ sex ~ maritalStatus ~ educationalLevel ~ numberOfChildren~ address ~ zipCode ~ city
+  def autoInc = id.? ~ name ~ firstName ~ birthDate ~ sex ~ maritalStatus ~ educationalLevel ~ numberOfChildren~ address ~ zipCode ~ city <> (Patient, Patient.unapply _)
 
 
   def list = PryntQuery({ Query(Patients).list})
 
   def select(p: Patient) = PryntQuery({Query(Patients).filter(_.id === p.id)})
 
-  def updateOrInsert(patient: Option[Patient],
-             n: String,
-             fn: String,
-             bd: Date,
-             s: String,
-             ms: String,
-             el: Int,
-             nc: Int,
-             a: String,
-             zp: String,
-             city: String) = {
-    patient match {
-      case None => insert(None, n, fn, bd, s, ms, el, nc, a, zp, city)
-      case Some(p: Patient) => update(new Patient(p.id, n, fn, bd, s, ms, el, nc, a, zp, city))
+  def updateOrInsert(patient: Patient) = {
+    patient.id match {
+      case None => println("INSERT"); newPatient
+      case Some(i: Int) =>update(patient)
     }
   }
 
-  def update(patient: Patient) = PryntQuery({select(patient).update(patient)})
+  def update(patient: Patient) = PryntQuery({ println("UPDATE");select(patient).update(patient)})
 
-  def newPatient = PryntQuery({Patients.autoInc.insert(None, "", "", new Date(123), "", "", 0, 0, "", "", "")})
+  def newPatient = {
+    val patient = new Patient(None, "a", "b", new Date(123), "Homme", "Célibataire", 0, 0, "c", "d", "e")
+    PryntQuery({Patients.autoInc.insert(patient)})
+    patient
+  }
 
-  def insert(id: Option[Int],
+  /*def insert(id: Option[Int],
              n: String,
              fn: String,
              bd: Date,
@@ -91,7 +87,7 @@ object Patients extends Table[Patient]("PATIENTS") {
              zp: String,
              city: String) = PryntQuery({
     Patients.autoInc.insert(id, n, fn, bd, s, ms, el, nc, a, zp, city)
-  })
+  }) */
 
   def delete(p: Patient) = PryntQuery({select(p).delete})
 

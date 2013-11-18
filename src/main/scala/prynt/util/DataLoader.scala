@@ -20,6 +20,7 @@ import java.io.{FileReader, File}
 import au.com.bytecode.opencsv.CSVReader
 import prynt.test._
 import scala.collection.immutable.StringOps
+import prynt.util.Converters._
 import scala.slick.jdbc.meta.MTable
 
 object DataLoader {
